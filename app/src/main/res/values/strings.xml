@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">TempoSpotter</string>
+    <string name="first_song_search">Enter song name</string>
+    <string name="search_button">Search</string>
+</resources>
