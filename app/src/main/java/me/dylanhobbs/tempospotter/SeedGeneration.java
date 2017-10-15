@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -16,7 +17,10 @@ import java.util.Map;
 
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Pager;
+import kaaes.spotify.webapi.android.models.Playlist;
 import kaaes.spotify.webapi.android.models.PlaylistSimple;
+import kaaes.spotify.webapi.android.models.PlaylistTrack;
+import kaaes.spotify.webapi.android.models.PlaylistTracksInformation;
 import kaaes.spotify.webapi.android.models.Track;
 import kaaes.spotify.webapi.android.models.TracksPager;
 import retrofit.Callback;
@@ -68,6 +72,30 @@ public class SeedGeneration extends AppCompatActivity {
                 Log.d("Me failure", error.toString());
             }
         });
+//TODO: Fix playlist simple lookup. Can't get tracks from it
+//        final ListView listView = (ListView) findViewById(R.id.playlist_result_list);
+//        // Set Clickable event
+//        assert listView != null;
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                // Get selected playlist
+//                Object o = listView.getItemAtPosition(position);
+//                PlaylistSimple playlist = (PlaylistSimple) o;
+//
+//                // Get PlaylistTrack from playlist
+//                PlaylistTracksInformation playListPager = playlist.tracks;
+//                List<PlaylistTrack> playListTrackList = playListPager.;
+//
+//                // Get tracks from Playlist Tracks
+//                ArrayList<Track> trackList = new ArrayList<>();
+//                for (int i = 0; i < playListTrackList.size(); i++) {
+//                    trackList.add(playListTrackList.get(i).track);
+//                }
+//
+//                String[] trackSeedGeneration = translateAndShuffle(trackList);
+//                goToRecGeneration(trackSeedGeneration);
+//            }
+//        });
     }
 
     protected void longTermTop(View view){
@@ -80,19 +108,7 @@ public class SeedGeneration extends AppCompatActivity {
                 // Get tracks from pager
                 List<Track> trackList = trackPager.items;
 
-                // Translate to array of IDs
-                ArrayList<String> trackIDs = new ArrayList<>();
-                for (int i = 0; i < trackList.size(); i++) {
-                    Track t = trackList.get(i);
-                    trackIDs.add(t.id);
-                }
-
-                // Shuffle and select 5 random ones
-                String[] trackSeedGeneration = new String[5];
-                Collections.shuffle(trackIDs);
-                for (int i=0; i < 5; i++){
-                    trackSeedGeneration[i] = trackIDs.get(i);
-                }
+                String[] trackSeedGeneration = translateAndShuffle(trackList);
 
                 goToRecGeneration(trackSeedGeneration);
             }
@@ -114,19 +130,7 @@ public class SeedGeneration extends AppCompatActivity {
                 // Get tracks from pager
                 List<Track> trackList = trackPager.items;
 
-                // Translate to array of IDs
-                ArrayList<String> trackIDs = new ArrayList<>();
-                for (int i = 0; i < trackList.size(); i++) {
-                    Track t = trackList.get(i);
-                    trackIDs.add(t.id);
-                }
-
-                // Shuffle and select 5 random ones
-                String[] trackSeedGeneration = new String[5];
-                Collections.shuffle(trackIDs);
-                for (int i=0; i < 5; i++){
-                    trackSeedGeneration[i] = trackIDs.get(i);
-                }
+                String[] trackSeedGeneration = translateAndShuffle(trackList);
 
                 goToRecGeneration(trackSeedGeneration);
             }
@@ -148,19 +152,7 @@ public class SeedGeneration extends AppCompatActivity {
                 // Get tracks from pager
                 List<Track> trackList = trackPager.items;
 
-                // Translate to array of IDs
-                ArrayList<String> trackIDs = new ArrayList<>();
-                for (int i = 0; i < trackList.size(); i++) {
-                    Track t = trackList.get(i);
-                    trackIDs.add(t.id);
-                }
-
-                // Shuffle and select 5 random ones
-                String[] trackSeedGeneration = new String[5];
-                Collections.shuffle(trackIDs);
-                for (int i=0; i < 5; i++){
-                    trackSeedGeneration[i] = trackIDs.get(i);
-                }
+                String[] trackSeedGeneration = translateAndShuffle(trackList);
 
                 goToRecGeneration(trackSeedGeneration);
             }
@@ -170,6 +162,24 @@ public class SeedGeneration extends AppCompatActivity {
                 Log.d("Me failure", error.toString());
             }
         });
+    }
+
+    public String[] translateAndShuffle(List<Track> trackList){
+        // Translate to array of IDs
+        ArrayList<String> trackIDs = new ArrayList<>();
+        for (int i = 0; i < trackList.size(); i++) {
+            Track t = trackList.get(i);
+            trackIDs.add(t.id);
+        }
+
+        // Shuffle and select 5 random ones
+        String[] trackSeedGeneration = new String[5];
+        Collections.shuffle(trackIDs);
+        for (int i=0; i < 5; i++){
+            trackSeedGeneration[i] = trackIDs.get(i);
+        }
+
+        return trackSeedGeneration;
     }
 
     public void goToRecGeneration(String[] seedGeneration){

@@ -124,7 +124,7 @@ public class MainActivity extends Activity implements
                 ListView listView = (ListView) findViewById(R.id.song_result_list);
 
                 // Add to adapter
-                TrackArrayAdapter tracksAdapter = new TrackArrayAdapter(
+                RecommendationAdapter tracksAdapter = new RecommendationAdapter(
                         current,
                         android.R.layout.simple_list_item_1,
                         useableTrackList);

@@ -74,13 +74,13 @@ public class RecommendationsGeneration extends AppCompatActivity {
                         ListView listView = (ListView) findViewById(R.id.recommendation_list);
 
                         // Add to adapter
-                        TrackArrayAdapter tracksAdapter = new TrackArrayAdapter(
+                        RecommendationAdapter recommendationAdapter = new RecommendationAdapter(
                                 current,
                                 android.R.layout.simple_list_item_1,
                                 useableTrackList);
 
                         // Set adapter
-                        listView.setAdapter(tracksAdapter);
+                        listView.setAdapter(recommendationAdapter);
                     }
 
                     @Override
@@ -95,6 +95,12 @@ public class RecommendationsGeneration extends AppCompatActivity {
                 Log.d("Me failure", error.toString());
             }
         });
+    }
+
+    public void generatePlaylist(View view){
+        // Get optional name
+
+        // Create playlist
     }
 
     public String createCommaSeperated(String[] seeds){

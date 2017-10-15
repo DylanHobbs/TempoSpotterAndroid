@@ -2,6 +2,7 @@ package me.dylanhobbs.tempospotter;
 
 import android.content.Context;
 import android.graphics.Movie;
+import android.speech.tts.TextToSpeech;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import kaaes.spotify.webapi.android.models.AudioFeaturesTrack;
 import kaaes.spotify.webapi.android.models.Track;
 
 /**
@@ -44,16 +46,13 @@ public class TrackArrayAdapter extends ArrayAdapter<Track> {
         new DownloadImageTask((ImageView) listItem.findViewById(R.id.imageView_album_art))
                 .execute(currentTrack.album.images.get(0).url);
 
-//        ImageView image = (ImageView)listItem.findViewById(R.id.imageView_album_art);
-//        image.setImageResource(currentTrack.album.images.get(0).url);
-
         // Track name
         TextView name = (TextView) listItem.findViewById(R.id.track_View_name);
         name.setText(currentTrack.name);
 
         // Artist name
-        TextView release = (TextView) listItem.findViewById(R.id.artist_View_name);
-        release.setText(currentTrack.artists.get(0).name);
+        TextView artist = (TextView) listItem.findViewById(R.id.artist_View_name);
+        artist.setText(currentTrack.artists.get(0).name);
 
         return listItem;
     }
