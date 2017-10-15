@@ -9,7 +9,10 @@ import android.view.View;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Pager;
@@ -25,6 +28,11 @@ import retrofit.client.Response;
  */
 
 public class SeedGeneration extends AppCompatActivity {
+    SpotifyService spotify;
+    //TODO: Send this information with an intent
+    public static String[] seed;
+    public static String selectedTrack;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,8 +41,8 @@ public class SeedGeneration extends AppCompatActivity {
         final Context current = this;
 
         Intent intent = getIntent();
-        String selectedTrack = intent.getStringExtra(MainActivity.TRACK_MESSAGE);
-        SpotifyService spotify = MainActivity.spotify;
+        selectedTrack = intent.getStringExtra(MainActivity.TRACK_MESSAGE);
+        spotify = MainActivity.spotify;
 
         spotify.getMyPlaylists(new Callback<Pager<PlaylistSimple>>() {
             @Override
@@ -63,15 +71,111 @@ public class SeedGeneration extends AppCompatActivity {
     }
 
     protected void longTermTop(View view){
+        HashMap<String, Object> options = new HashMap<>();
+        options.put("limit", 20);
+        options.put("time_range", "long_term");
+        spotify.getTopTracks(options, new Callback<Pager<Track>>() {
+            @Override
+            public void success(Pager<Track> trackPager, Response response) {
+                // Get tracks from pager
+                List<Track> trackList = trackPager.items;
 
+                // Translate to array of IDs
+                ArrayList<String> trackIDs = new ArrayList<>();
+                for (int i = 0; i < trackList.size(); i++) {
+                    Track t = trackList.get(i);
+                    trackIDs.add(t.id);
+                }
+
+                // Shuffle and select 5 random ones
+                String[] trackSeedGeneration = new String[5];
+                Collections.shuffle(trackIDs);
+                for (int i=0; i < 5; i++){
+                    trackSeedGeneration[i] = trackIDs.get(i);
+                }
+
+                goToRecGeneration(trackSeedGeneration);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.d("Me failure", error.toString());
+            }
+        });
     }
 
     protected void mediumTermTop(View view){
+        HashMap<String, Object> options = new HashMap<>();
+        options.put("limit", 20);
+        options.put("time_range", "medium_term");
+        spotify.getTopTracks(options, new Callback<Pager<Track>>() {
+            @Override
+            public void success(Pager<Track> trackPager, Response response) {
+                // Get tracks from pager
+                List<Track> trackList = trackPager.items;
 
+                // Translate to array of IDs
+                ArrayList<String> trackIDs = new ArrayList<>();
+                for (int i = 0; i < trackList.size(); i++) {
+                    Track t = trackList.get(i);
+                    trackIDs.add(t.id);
+                }
+
+                // Shuffle and select 5 random ones
+                String[] trackSeedGeneration = new String[5];
+                Collections.shuffle(trackIDs);
+                for (int i=0; i < 5; i++){
+                    trackSeedGeneration[i] = trackIDs.get(i);
+                }
+
+                goToRecGeneration(trackSeedGeneration);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.d("Me failure", error.toString());
+            }
+        });
     }
 
     protected void shortTermTop(View view){
+        HashMap<String, Object> options = new HashMap<>();
+        options.put("limit", 20);
+        options.put("time_range", "short_term");
+        spotify.getTopTracks(options, new Callback<Pager<Track>>() {
+            @Override
+            public void success(Pager<Track> trackPager, Response response) {
+                // Get tracks from pager
+                List<Track> trackList = trackPager.items;
 
+                // Translate to array of IDs
+                ArrayList<String> trackIDs = new ArrayList<>();
+                for (int i = 0; i < trackList.size(); i++) {
+                    Track t = trackList.get(i);
+                    trackIDs.add(t.id);
+                }
+
+                // Shuffle and select 5 random ones
+                String[] trackSeedGeneration = new String[5];
+                Collections.shuffle(trackIDs);
+                for (int i=0; i < 5; i++){
+                    trackSeedGeneration[i] = trackIDs.get(i);
+                }
+
+                goToRecGeneration(trackSeedGeneration);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.d("Me failure", error.toString());
+            }
+        });
+    }
+
+    public void goToRecGeneration(String[] seedGeneration){
+        seed = seedGeneration;
+        Intent intent = new Intent(this, RecommendationsGeneration.class);
+        startActivity(intent);
     }
 
 

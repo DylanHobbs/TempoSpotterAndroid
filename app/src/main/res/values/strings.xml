@@ -5,4 +5,6 @@
     <string name="long_term_search">Long Term</string>
     <string name="short_term_search">Short Term</string>
     <string name="medium_term_search">Medium Term</string>
+    <string name="create_playlist_button">Create Spotify Playlist</string>
+    <string name="template_playlist_name">Tempo Spotter Playlist</string>
 </resources>

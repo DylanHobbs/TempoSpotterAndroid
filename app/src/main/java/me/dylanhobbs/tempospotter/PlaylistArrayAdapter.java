@@ -12,17 +12,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kaaes.spotify.webapi.android.models.Playlist;
+import kaaes.spotify.webapi.android.models.PlaylistSimple;
 import kaaes.spotify.webapi.android.models.Track;
 
 /**
  * Created by dylanhobbs on 14/10/2017.
  */
 
-public class PlaylistArrayAdapter extends ArrayAdapter<Playlist> {
+public class PlaylistArrayAdapter extends ArrayAdapter<PlaylistSimple> {
     private Context mContext;
-    private List<Playlist> playListList = new ArrayList<>();
+    private List<PlaylistSimple> playListList = new ArrayList<>();
 
-    public PlaylistArrayAdapter(Context context, int textViewResourceId,  ArrayList<Playlist> list) {
+    public PlaylistArrayAdapter(Context context, int textViewResourceId,  ArrayList<PlaylistSimple> list) {
         super(context, textViewResourceId, list);
         mContext = context;
         playListList = list;
@@ -34,11 +35,11 @@ public class PlaylistArrayAdapter extends ArrayAdapter<Playlist> {
         if(listItem == null)
             listItem = LayoutInflater.from(mContext).inflate(R.layout.playlist_list_item, parent, false);
 
-        Playlist currentPlaylist = playListList.get(position);
+        PlaylistSimple currentPlaylist = playListList.get(position);
 
         // Playlist Art
-//        new DownloadImageTask((ImageView) listItem.findViewById(R.id.imageView_playlist_art))
-//                .execute(currentPlaylist.images.get(0).url);
+        new DownloadImageTask((ImageView) listItem.findViewById(R.id.imageView_playlist_art))
+                .execute(currentPlaylist.images.get(0).url);
 
         // PlayList name
         TextView name = (TextView) listItem.findViewById(R.id.playlist_View_name);

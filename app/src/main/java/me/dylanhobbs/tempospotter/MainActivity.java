@@ -67,7 +67,7 @@ public class MainActivity extends Activity implements
                 REDIRECT_URI);
         builder.setScopes(new String[]{"user-read-private", "streaming", "user-read-email",
                 "user-library-read", "user-top-read", "playlist-read-private",
-                "playlist-modify-public", "playlist-modify-private"});
+                "playlist-modify-public", "playlist-modify-private", "playlist-read-collaborative"});
         AuthenticationRequest request = builder.build();
 
         AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
