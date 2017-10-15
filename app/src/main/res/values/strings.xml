@@ -2,4 +2,7 @@
     <string name="app_name">TempoSpotter</string>
     <string name="first_song_search">Enter song name</string>
     <string name="search_button">Search</string>
+    <string name="long_term_search">Long Term</string>
+    <string name="short_term_search">Short Term</string>
+    <string name="medium_term_search">Medium Term</string>
 </resources>

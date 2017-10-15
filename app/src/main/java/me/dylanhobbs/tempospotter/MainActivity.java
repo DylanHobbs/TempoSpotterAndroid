@@ -7,11 +7,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
@@ -41,6 +43,8 @@ import retrofit.client.Response;
 public class MainActivity extends Activity implements
         SpotifyPlayer.NotificationCallback, ConnectionStateCallback {
 
+    public static final String TRACK_MESSAGE = "com.example.myfirstapp.TRACK_MESSAGE";
+
     // TODO: Replace with your client ID
     private static final String CLIENT_ID = "f8e62d489d8d48d29ea438319de216d7";
     // TODO: Replace with your redirect URI
@@ -51,7 +55,7 @@ public class MainActivity extends Activity implements
     private static final int REQUEST_CODE = 1337;
 
     private Player mPlayer;
-    private SpotifyService spotify;
+    public static SpotifyService spotify = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,7 +104,7 @@ public class MainActivity extends Activity implements
     }
 
     // Search Spotify for given query
-    protected  void searchForSong(View view){
+    public void searchForSong(View view){
         final Context current = this;
         // Get search query
         EditText editText = (EditText) findViewById(R.id.song_search_query);
@@ -115,12 +119,6 @@ public class MainActivity extends Activity implements
                 Pager<Track> trackPager  = returnedPager.tracks;
                 List<Track> trackList = trackPager.items;
                 ArrayList<Track> useableTrackList = (ArrayList) trackList;
-
-                ArrayList<String> al_trackList = new ArrayList<String>();
-                for(int i=0; i<trackList.size(); i++){
-                    Track t = trackList.get(i);
-                    al_trackList.add(t.name);
-                }
 
                 // Get the list
                 ListView listView = (ListView) findViewById(R.id.song_result_list);
@@ -140,6 +138,22 @@ public class MainActivity extends Activity implements
                 Log.d("Me failure", error.toString());
             }
         });
+
+        final ListView listView = (ListView) findViewById(R.id.song_result_list);
+        // Set Clickable event
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Object o = listView.getItemAtPosition(position);
+                Track track = (Track) o;
+                goToSeedGenertion(track);
+            }
+        });
+    }
+
+    public void goToSeedGenertion(Track track){
+        Intent intent = new Intent(this, SeedGeneration.class);
+        intent.putExtra(TRACK_MESSAGE, track.id);
+        startActivity(intent);
     }
 
     @Override
