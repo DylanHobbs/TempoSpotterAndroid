@@ -38,8 +38,10 @@ public class PlaylistArrayAdapter extends ArrayAdapter<PlaylistSimple> {
         PlaylistSimple currentPlaylist = playListList.get(position);
 
         // Playlist Art
-        new DownloadImageTask((ImageView) listItem.findViewById(R.id.imageView_playlist_art))
-                .execute(currentPlaylist.images.get(0).url);
+        if(currentPlaylist.images.size() > 0){
+            new DownloadImageTask((ImageView) listItem.findViewById(R.id.imageView_playlist_art))
+                    .execute(currentPlaylist.images.get(0).url);
+        }
 
         // PlayList name
         TextView name = (TextView) listItem.findViewById(R.id.playlist_View_name);

@@ -7,4 +7,7 @@
     <string name="medium_term_search">Medium Term</string>
     <string name="create_playlist_button">Create Spotify Playlist</string>
     <string name="template_playlist_name">Tempo Spotter Playlist</string>
+    <string name="create_playlist_confirm">Yes, I\'m sure</string>
+    <string name="cancel_playlist_create">No, ABORT</string>
+    <string name="playlist_create_information">Are you sure you want to create a Spotify playlist?</string>
 </resources>

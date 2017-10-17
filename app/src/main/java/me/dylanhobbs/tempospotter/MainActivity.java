@@ -40,14 +40,12 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class MainActivity extends Activity implements
+public class MainActivity extends AppCompatActivity implements
         SpotifyPlayer.NotificationCallback, ConnectionStateCallback {
 
     public static final String TRACK_MESSAGE = "com.example.myfirstapp.TRACK_MESSAGE";
 
-    // TODO: Replace with your client ID
     private static final String CLIENT_ID = "f8e62d489d8d48d29ea438319de216d7";
-    // TODO: Replace with your redirect URI
     private static final String REDIRECT_URI = "tempo-spotter-android-login://callback";
 
     // Request code that will be used to verify if the result comes from correct activity
