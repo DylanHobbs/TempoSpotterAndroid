@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -35,20 +36,20 @@ import retrofit.client.Response;
  */
 
 public class RecommendationsGeneration extends AppCompatActivity {
-    final int TEMPO_VARIATION = 5;
-    private boolean created;
     final RecommendationAdapter[] recommendationAdapter = new RecommendationAdapter[1];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recommendation_generation);
+        Button goButton = (Button) findViewById(R.id.create_spotify_playlist_button);
+        goButton.setEnabled(true);
 
         // List of tracks in list
         ArrayList<Track> trackList;
 
         // Set playlist created boolean of this instance to false
-        this.created = false;
+        //this.created = false;
 
         final SpotifyService spotify;
         final String[] seed;
@@ -67,15 +68,11 @@ public class RecommendationsGeneration extends AppCompatActivity {
             @Override
             public void success(AudioFeaturesTrack audioFeaturesTrack, Response response) {
                 float tempo = audioFeaturesTrack.tempo;
-                max_tempo[0] = tempo + TEMPO_VARIATION;
-                min_tempo[0] = tempo - TEMPO_VARIATION;
 
                 // Generate reccomendations
                 String formattedSeed = createCommaSeperated(seed);
 
                 HashMap<String, Object> options = new HashMap<>();
-//                options.put("max_tempo", max_tempo[0]);
-//                options.put("min_tempo", min_tempo[0]);
                 options.put("target_tempo", tempo);
                 options.put("seed_tracks", formattedSeed);
 
@@ -121,82 +118,84 @@ public class RecommendationsGeneration extends AppCompatActivity {
         //if(newFragment.getGoAhead()){
 
         // Check if playlist has been created for this instance
-        if(getCreatedStatus() == false){
-            setCreatedStatus(true);
+//        if(getCreatedStatus() == false){
+//            setCreatedStatus(true);
 
-            // Get user
-            final String[] me = new String[1];
-            MainActivity.spotify.getMe(new Callback<UserPrivate>() {
-                @Override
-                public void success(UserPrivate userPrivate, Response response) {
-                    me[0] = userPrivate.id;
+        // Get user
+        final String[] me = new String[1];
+        MainActivity.spotify.getMe(new Callback<UserPrivate>() {
+            @Override
+            public void success(UserPrivate userPrivate, Response response) {
+                me[0] = userPrivate.id;
 
-                    // Get optional name
-                    EditText editText = (EditText) findViewById(R.id.optional_playlist_name_field);
-                    String playlistName = "";
+                // Get optional name
+                EditText editText = (EditText) findViewById(R.id.optional_playlist_name_field);
+                String playlistName = "";
 
-                    // TODO: Add tempo to playlist name
-                    if(editText.getText().toString() == null || editText.getText().toString() == ""){
-                        playlistName = "TempoSpotter Playlist";
-                    } else {
-                        playlistName = editText.getText().toString();
-                    }
+                // TODO: Add tempo to playlist name
+                if(editText.getText().toString().equals("")){
+                    playlistName = "TempoSpotter Playlist ";
+                } else {
+                    playlistName = editText.getText().toString();
+                }
 
-                    // Create playlist
-                    HashMap<String, Object> options = new HashMap<>();
-                    options.put("name", playlistName);
-                    options.put("description", "Auto generated playlist made by TempoSpotter");
-                    MainActivity.spotify.createPlaylist(me[0], options, new Callback<Playlist>() {
-                        @Override
-                        public void success(Playlist playlist, Response response) {
-                            //TODO: Flash success
+                // Create playlist
+                HashMap<String, Object> options = new HashMap<>();
+                options.put("name", playlistName);
+                options.put("description", "Auto generated playlist made by TempoSpotter");
+                MainActivity.spotify.createPlaylist(me[0], options, new Callback<Playlist>() {
+                    @Override
+                    public void success(Playlist playlist, Response response) {
+                        //TODO: Flash success
                                 /* Add tracks */
-                            // Get list of tracks
-                            ListView listView = (ListView) findViewById(R.id.recommendation_list);
-                            RecommendationAdapter a = (RecommendationAdapter) listView.getAdapter();
+                        // Get list of tracks
+                        ListView listView = (ListView) findViewById(R.id.recommendation_list);
+                        RecommendationAdapter a = (RecommendationAdapter) listView.getAdapter();
 
-                            ArrayList<Track> trackList = new ArrayList<Track>();
-                            for (int i=0;i<a.getCount();i++){
-                                trackList.add((Track) a.getItem(i));
+                        ArrayList<Track> trackList = new ArrayList<Track>();
+                        for (int i=0;i<a.getCount();i++){
+                            trackList.add((Track) a.getItem(i));
+                        }
+
+                        // Add them to the playlist
+                        HashMap<String, Object> options1 = new HashMap<>();
+                        HashMap<String, Object> body = new HashMap<>();
+
+                        String formattedTracks = createCommaSeperated(trackList);
+                        options1.put("uris", formattedTracks);
+
+                        final Playlist playl = playlist;
+                        final String me1 = me[0];
+
+                        MainActivity.spotify.addTracksToPlaylist(me1, playl.id, options1, body, new Callback<Pager<PlaylistTrack>>() {
+                            @Override
+                            public void success(Pager<PlaylistTrack> playlistTrackPager, Response response) {
+                                // Disable the button
+                                Button goButton = (Button) findViewById(R.id.create_spotify_playlist_button);
+                                goButton.setEnabled(false);
                             }
 
-                            // Add them to the playlist
-                            HashMap<String, Object> options1 = new HashMap<>();
-                            HashMap<String, Object> body = new HashMap<>();
+                            @Override
+                            public void failure(RetrofitError error) {
+                                // TODO: Feedback to user
+                            }
+                        });
+                    }
 
-                            String formattedTracks = createCommaSeperated(trackList);
-                            options1.put("uris", formattedTracks);
+                    @Override
+                    public void failure(RetrofitError error) {
+                        //TODO: Flash error
+                    }
+                });
+            }
 
-                            final Playlist playl = playlist;
-                            final String me1 = me[0];
-
-                            MainActivity.spotify.addTracksToPlaylist(me1, playl.id, options1, body, new Callback<Pager<PlaylistTrack>>() {
-                                @Override
-                                public void success(Pager<PlaylistTrack> playlistTrackPager, Response response) {
-                                    // TODO: Feedback to user
-                                }
-
-                                @Override
-                                public void failure(RetrofitError error) {
-                                    // TODO: Feedback to user
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void failure(RetrofitError error) {
-                            //TODO: Flash error
-                        }
-                    });
-                }
-
-                @Override
-                public void failure(RetrofitError error) {
-                    //TODO: Log failure
-                }
-            });
-        }
+            @Override
+            public void failure(RetrofitError error) {
+                //TODO: Log failure
+            }
+        });
     }
+    //}
 
     public String createCommaSeperated(String[] seeds){
         String toReturn = "";
@@ -214,11 +213,11 @@ public class RecommendationsGeneration extends AppCompatActivity {
         return toReturn;
     }
 
-    public boolean getCreatedStatus(){
-        return this.created;
-    }
+//    public boolean getCreatedStatus(){
+//        return this.created;
+//    }
 
-    private void setCreatedStatus(boolean created) {
-        this.created = created;
-    }
+//    private void setCreatedStatus(boolean created) {
+//        this.created = created;
+//    }
 }

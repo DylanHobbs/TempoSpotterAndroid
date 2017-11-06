@@ -28,7 +28,7 @@ public class RecommendationAdapter extends ArrayAdapter {
     private Context mContext;
     private List<Track> trackList = new ArrayList<>();
 
-    public RecommendationAdapter(Context context, int textViewResourceId,  ArrayList<Track> list) {
+    RecommendationAdapter(Context context, int textViewResourceId, ArrayList<Track> list) {
         super(context, textViewResourceId, list);
         mContext = context;
         trackList = list;
