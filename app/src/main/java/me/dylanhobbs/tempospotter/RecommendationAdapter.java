@@ -14,17 +14,13 @@ import java.util.List;
 
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.AudioFeaturesTrack;
-import kaaes.spotify.webapi.android.models.AudioFeaturesTracks;
 import kaaes.spotify.webapi.android.models.Track;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-/**
- * Created by dylanhobbs on 15/10/2017.
- */
 
-public class RecommendationAdapter extends ArrayAdapter {
+class RecommendationAdapter extends ArrayAdapter {
     private Context mContext;
     private List<Track> trackList = new ArrayList<>();
 

@@ -11,19 +11,14 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import kaaes.spotify.webapi.android.models.Playlist;
 import kaaes.spotify.webapi.android.models.PlaylistSimple;
-import kaaes.spotify.webapi.android.models.Track;
 
-/**
- * Created by dylanhobbs on 14/10/2017.
- */
 
-public class PlaylistArrayAdapter extends ArrayAdapter<PlaylistSimple> {
+class PlaylistArrayAdapter extends ArrayAdapter<PlaylistSimple> {
     private Context mContext;
     private List<PlaylistSimple> playListList = new ArrayList<>();
 
-    public PlaylistArrayAdapter(Context context, int textViewResourceId,  ArrayList<PlaylistSimple> list) {
+    PlaylistArrayAdapter(Context context, int textViewResourceId, ArrayList<PlaylistSimple> list) {
         super(context, textViewResourceId, list);
         mContext = context;
         playListList = list;

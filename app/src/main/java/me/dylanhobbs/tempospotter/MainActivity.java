@@ -3,17 +3,12 @@ package me.dylanhobbs.tempospotter;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.app.Activity;
 import android.content.Intent;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
@@ -31,7 +26,6 @@ import java.util.List;
 
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
-import kaaes.spotify.webapi.android.models.Album;
 import kaaes.spotify.webapi.android.models.Pager;
 import kaaes.spotify.webapi.android.models.Track;
 import kaaes.spotify.webapi.android.models.TracksPager;
@@ -96,7 +90,6 @@ public class MainActivity extends AppCompatActivity implements
 
                     @Override
                     public void onError(Throwable throwable) {
-                        Log.e("MainActivity", "Could not initialize player: " + throwable.getMessage());
                     }
                 });
             }
@@ -115,7 +108,6 @@ public class MainActivity extends AppCompatActivity implements
             @Override
             public void success(TracksPager returnedPager, Response response) {
                 // Transform pager to list of tracks
-                Log.d("Track pager success", returnedPager.toString());
                 Pager<Track> trackPager  = returnedPager.tracks;
                 List<Track> trackList = trackPager.items;
                 ArrayList<Track> useableTrackList = (ArrayList) trackList;
@@ -135,7 +127,6 @@ public class MainActivity extends AppCompatActivity implements
 
             @Override
             public void failure(RetrofitError error) {
-                Log.d("Me failure", error.toString());
             }
         });
 
@@ -169,7 +160,6 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onPlaybackEvent(PlayerEvent playerEvent) {
-        Log.d("MainActivity", "Playback event received: " + playerEvent.name());
         switch (playerEvent) {
             // Handle event type as necessary
             default:
@@ -179,7 +169,6 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onPlaybackError(Error error) {
-        Log.d("MainActivity", "Playback error received: " + error.name());
         switch (error) {
             // Handle error type as necessary
             default:
@@ -189,40 +178,33 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onLoggedIn() {
-        Log.d("MainActivity", "User logged in");
         //Test Player
         spotify.getMe(new Callback<UserPrivate>() {
             @Override
             public void success(UserPrivate user, Response response) {
-                Log.d("Me success", user.email);
                 TextView textView = (TextView) findViewById(R.id.display_name_box);
                 textView.setText(user.id);
             }
 
             @Override
             public void failure(RetrofitError error) {
-                Log.d("Me failure", error.toString());
             }
         });
     }
 
     @Override
     public void onLoggedOut() {
-        Log.d("MainActivity", "User logged out");
     }
 
     @Override
     public void onLoginFailed(Error error) {
-        Log.d("MainActivity", "Login failed");
     }
 
     @Override
     public void onTemporaryError() {
-        Log.d("MainActivity", "Temporary error occurred");
     }
 
     @Override
     public void onConnectionMessage(String message) {
-        Log.d("MainActivity", "Received connection message: " + message);
     }
 }

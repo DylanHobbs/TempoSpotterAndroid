@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -63,7 +62,6 @@ public class SeedGeneration extends AppCompatActivity {
 
             @Override
             public void failure(RetrofitError error) {
-                Log.d("Me failure", error.toString());
             }
         });
 
@@ -97,7 +95,6 @@ public class SeedGeneration extends AppCompatActivity {
 
                     @Override
                     public void failure(RetrofitError error) {
-                        Log.d("Failed to get tracks", error.toString());
                     }
                 });
             }
@@ -121,7 +118,6 @@ public class SeedGeneration extends AppCompatActivity {
 
             @Override
             public void failure(RetrofitError error) {
-                Log.d("Me failure", error.toString());
             }
         });
     }
@@ -143,7 +139,6 @@ public class SeedGeneration extends AppCompatActivity {
 
             @Override
             public void failure(RetrofitError error) {
-                Log.d("Me failure", error.toString());
             }
         });
     }
@@ -165,7 +160,6 @@ public class SeedGeneration extends AppCompatActivity {
 
             @Override
             public void failure(RetrofitError error) {
-                Log.d("Me failure", error.toString());
             }
         });
     }
