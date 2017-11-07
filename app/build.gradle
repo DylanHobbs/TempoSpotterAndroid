@@ -44,4 +44,6 @@ dependencies {
 
     // This library handles music playback
     compile 'com.spotify.sdk:spotify-player-24-noconnect:2.20b@aar'
+
+    compile 'cn.pedant.sweetalert:library:1.3'
 }

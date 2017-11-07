@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.AudioFeaturesTrack;
 import kaaes.spotify.webapi.android.models.Pager;
@@ -120,6 +121,7 @@ public class RecommendationsGeneration extends AppCompatActivity {
         // Check if playlist has been created for this instance
 //        if(getCreatedStatus() == false){
 //            setCreatedStatus(true);
+        final Context current = this;
 
         // Get user
         final String[] me = new String[1];
@@ -150,7 +152,7 @@ public class RecommendationsGeneration extends AppCompatActivity {
                                 /* Add tracks */
                         // Get list of tracks
                         ListView listView = (ListView) findViewById(R.id.recommendation_list);
-                        RecommendationAdapter a = (RecommendationAdapter) listView.getAdapter();
+                        final RecommendationAdapter a = (RecommendationAdapter) listView.getAdapter();
 
                         ArrayList<Track> trackList = new ArrayList<Track>();
                         for (int i=0;i<a.getCount();i++){
@@ -173,6 +175,12 @@ public class RecommendationsGeneration extends AppCompatActivity {
                                 // Disable the button
                                 Button goButton = (Button) findViewById(R.id.create_spotify_playlist_button);
                                 goButton.setEnabled(false);
+
+                                //Show congratulations?
+                                new SweetAlertDialog(current, SweetAlertDialog.SUCCESS_TYPE)
+                                        .setTitleText("Playlist Created!")
+                                        .setContentText("Head on over to Spotify to check it out!")
+                                        .show(); 
                             }
 
                             @Override
