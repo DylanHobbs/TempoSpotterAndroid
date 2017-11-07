@@ -2,44 +2,33 @@ package me.dylanhobbs.tempospotter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Pager;
-import kaaes.spotify.webapi.android.models.Playlist;
 import kaaes.spotify.webapi.android.models.PlaylistSimple;
 import kaaes.spotify.webapi.android.models.PlaylistTrack;
-import kaaes.spotify.webapi.android.models.PlaylistTracksInformation;
 import kaaes.spotify.webapi.android.models.Track;
-import kaaes.spotify.webapi.android.models.TracksPager;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-/**
- * Created by dylanhobbs on 14/10/2017.
- */
-
 public class SeedGeneration extends AppCompatActivity {
     SpotifyService spotify;
-    //TODO: Send this information with an intent
-    public static String[] seed;
-    public static String selectedTrack;
-    private String userID = "";
+    public static final String SEED_MESSAGE = "com.dylanhobbs.tempospotter.SEED_MESSAGE";
+    public static final String SELECTED_TRACK_MESSAGE = "com.dylanhobbs.tempospotter.SELECTED_TRACK_MESSAGE";
+
+    private static String selectedTrack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +39,6 @@ public class SeedGeneration extends AppCompatActivity {
 
         Intent intent = getIntent();
         selectedTrack = intent.getStringExtra(MainActivity.TRACK_MESSAGE);
-        userID = intent.getStringExtra(MainActivity.USER_ID_MESSAGE);
 
         spotify = MainActivity.spotify;
 
@@ -201,8 +189,9 @@ public class SeedGeneration extends AppCompatActivity {
     }
 
     public void goToRecGeneration(String[] seedGeneration){
-        seed = seedGeneration;
         Intent intent = new Intent(this, RecommendationsGeneration.class);
+        intent.putExtra(SEED_MESSAGE, seedGeneration);
+        intent.putExtra(SELECTED_TRACK_MESSAGE, selectedTrack);
         startActivity(intent);
     }
 

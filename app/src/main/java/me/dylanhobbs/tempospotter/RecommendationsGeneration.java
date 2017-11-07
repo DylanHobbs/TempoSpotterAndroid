@@ -1,7 +1,7 @@
 package me.dylanhobbs.tempospotter;
 
-import android.app.DialogFragment;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -9,13 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
-
-import com.spotify.sdk.android.player.Spotify;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -32,10 +27,6 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-/**
- * Created by dylanhobbs on 15/10/2017.
- */
-
 public class RecommendationsGeneration extends AppCompatActivity {
     final RecommendationAdapter[] recommendationAdapter = new RecommendationAdapter[1];
 
@@ -43,34 +34,27 @@ public class RecommendationsGeneration extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recommendation_generation);
+
+        // Get data
+        Intent intent = getIntent();
+        String selectedTrack = intent.getStringExtra(SeedGeneration.SELECTED_TRACK_MESSAGE);
+        final String[] seed = intent.getStringArrayExtra(SeedGeneration.SEED_MESSAGE);
+
+
+        // Allow create playlist button
         Button goButton = (Button) findViewById(R.id.create_spotify_playlist_button);
         goButton.setEnabled(true);
 
-        // List of tracks in list
-        ArrayList<Track> trackList;
-
-        // Set playlist created boolean of this instance to false
-        //this.created = false;
-
         final SpotifyService spotify;
-        final String[] seed;
-        String selectedTrack;
-
-        final Float[] max_tempo = new Float[1];
-        final Float[] min_tempo = new Float[1];
 
         final Context current = this;
         spotify = MainActivity.spotify;
-        seed = SeedGeneration.seed;
-        selectedTrack = SeedGeneration.selectedTrack;
 
         // Get Tempo of Selected Song
         spotify.getTrackAudioFeatures(selectedTrack, new Callback<AudioFeaturesTrack>() {
             @Override
             public void success(AudioFeaturesTrack audioFeaturesTrack, Response response) {
                 float tempo = audioFeaturesTrack.tempo;
-
-                // Generate reccomendations
                 String formattedSeed = createCommaSeperated(seed);
 
                 HashMap<String, Object> options = new HashMap<>();
@@ -111,16 +95,6 @@ public class RecommendationsGeneration extends AppCompatActivity {
     }
 
     public void generatePlaylist(View view){
-        // Flash Confirm Dialog
-//        CreatePlaylistDialogFragment newFragment = new CreatePlaylistDialogFragment();
-//        newFragment.show(getFragmentManager(), "playlist_confirm");
-
-        // Get confirm
-        //if(newFragment.getGoAhead()){
-
-        // Check if playlist has been created for this instance
-//        if(getCreatedStatus() == false){
-//            setCreatedStatus(true);
         final Context current = this;
 
         // Get user
@@ -134,7 +108,6 @@ public class RecommendationsGeneration extends AppCompatActivity {
                 EditText editText = (EditText) findViewById(R.id.optional_playlist_name_field);
                 String playlistName = "";
 
-                // TODO: Add tempo to playlist name
                 if(editText.getText().toString().equals("")){
                     playlistName = "TempoSpotter Playlist ";
                 } else {
@@ -148,8 +121,6 @@ public class RecommendationsGeneration extends AppCompatActivity {
                 MainActivity.spotify.createPlaylist(me[0], options, new Callback<Playlist>() {
                     @Override
                     public void success(Playlist playlist, Response response) {
-                        //TODO: Flash success
-                                /* Add tracks */
                         // Get list of tracks
                         ListView listView = (ListView) findViewById(R.id.recommendation_list);
                         final RecommendationAdapter a = (RecommendationAdapter) listView.getAdapter();
@@ -185,25 +156,30 @@ public class RecommendationsGeneration extends AppCompatActivity {
 
                             @Override
                             public void failure(RetrofitError error) {
-                                // TODO: Feedback to user
+                                Log.d("Playlist Generation", " Failed trying to add tracks", error);
                             }
                         });
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
-                        //TODO: Flash error
+                        Log.d("Playlist Generation", " Failed trying to create playlist", error);
                     }
                 });
             }
 
             @Override
             public void failure(RetrofitError error) {
-                //TODO: Log failure
+                Log.d("Playlist Generation", " Failed to get user profile", error);
+
+                // Show failure - Previous errors bubble up
+                new SweetAlertDialog(current, SweetAlertDialog.ERROR_TYPE)
+                        .setTitleText("Oops...")
+                        .setContentText("Something went wrong when creating a playlist. Hopefully it works this time")
+                        .show();
             }
         });
     }
-    //}
 
     public String createCommaSeperated(String[] seeds){
         String toReturn = "";
@@ -220,12 +196,4 @@ public class RecommendationsGeneration extends AppCompatActivity {
         }
         return toReturn;
     }
-
-//    public boolean getCreatedStatus(){
-//        return this.created;
-//    }
-
-//    private void setCreatedStatus(boolean created) {
-//        this.created = created;
-//    }
 }

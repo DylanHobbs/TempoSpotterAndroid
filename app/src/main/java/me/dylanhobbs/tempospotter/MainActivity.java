@@ -191,7 +191,6 @@ public class MainActivity extends AppCompatActivity implements
     public void onLoggedIn() {
         Log.d("MainActivity", "User logged in");
         //Test Player
-        //mPlayer.playUri(null, "spotify:track:2TpxZ7JUBn3uw46aR7qd6V", 0, 0);
         spotify.getMe(new Callback<UserPrivate>() {
             @Override
             public void success(UserPrivate user, Response response) {
