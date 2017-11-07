@@ -14,6 +14,7 @@
         android:ems="10"
         android:hint="@string/first_song_search"
         android:inputType="textPersonName"
+        android:imeOptions="actionSearch"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/button"
         android:layout_marginStart="16dp"

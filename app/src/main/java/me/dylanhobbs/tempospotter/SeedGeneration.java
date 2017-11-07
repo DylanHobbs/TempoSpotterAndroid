@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,6 +37,7 @@ public class SeedGeneration extends AppCompatActivity {
     //TODO: Send this information with an intent
     public static String[] seed;
     public static String selectedTrack;
+    private String userID = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,8 @@ public class SeedGeneration extends AppCompatActivity {
 
         Intent intent = getIntent();
         selectedTrack = intent.getStringExtra(MainActivity.TRACK_MESSAGE);
+        userID = intent.getStringExtra(MainActivity.USER_ID_MESSAGE);
+
         spotify = MainActivity.spotify;
 
         spotify.getMyPlaylists(new Callback<Pager<PlaylistSimple>>() {
@@ -72,30 +76,42 @@ public class SeedGeneration extends AppCompatActivity {
                 Log.d("Me failure", error.toString());
             }
         });
-//TODO: Fix playlist simple lookup. Can't get tracks from it
-//        final ListView listView = (ListView) findViewById(R.id.playlist_result_list);
-//        // Set Clickable event
-//        assert listView != null;
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                // Get selected playlist
-//                Object o = listView.getItemAtPosition(position);
-//                PlaylistSimple playlist = (PlaylistSimple) o;
-//
-//                // Get PlaylistTrack from playlist
-//                PlaylistTracksInformation playListPager = playlist.tracks;
-//                List<PlaylistTrack> playListTrackList = playListPager.;
-//
-//                // Get tracks from Playlist Tracks
-//                ArrayList<Track> trackList = new ArrayList<>();
-//                for (int i = 0; i < playListTrackList.size(); i++) {
-//                    trackList.add(playListTrackList.get(i).track);
-//                }
-//
-//                String[] trackSeedGeneration = translateAndShuffle(trackList);
-//                goToRecGeneration(trackSeedGeneration);
-//            }
-//        });
+
+        final ListView listView = (ListView) findViewById(R.id.playlist_result_list);
+        // Set Clickable event
+        assert listView != null;
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Get selected playlist
+                Object o = listView.getItemAtPosition(position);
+                PlaylistSimple playlist = (PlaylistSimple) o;
+                String chosenPlaylistID = playlist.id;
+                String chosedUserID = playlist.owner.id;
+
+                // Create a real playlist from the ID
+                spotify.getPlaylistTracks(chosedUserID, chosenPlaylistID, new Callback<Pager<PlaylistTrack>>() {
+                    @Override
+                    public void success(Pager<PlaylistTrack> playlistTrackPager, Response response) {
+                        // Get PlaylistTrack from playlist
+                        List<PlaylistTrack> platListTrackList = playlistTrackPager.items;
+
+                        // Get tracks from Playlist Tracks
+                        ArrayList<Track> trackList = new ArrayList<>();
+                        for (int i = 0; i < platListTrackList.size(); i++) {
+                            trackList.add(platListTrackList.get(i).track);
+                        }
+
+                        String[] trackSeedGeneration = translateAndShuffle(trackList);
+                        goToRecGeneration(trackSeedGeneration);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        Log.d("Failed to get tracks", error.toString());
+                    }
+                });
+            }
+        });
     }
 
     protected void longTermTop(View view){

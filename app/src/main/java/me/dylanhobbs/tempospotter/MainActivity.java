@@ -43,7 +43,8 @@ import retrofit.client.Response;
 public class MainActivity extends AppCompatActivity implements
         SpotifyPlayer.NotificationCallback, ConnectionStateCallback {
 
-    public static final String TRACK_MESSAGE = "com.example.myfirstapp.TRACK_MESSAGE";
+    public static final String TRACK_MESSAGE = "com.dylanhobbs.tempospotter.TRACK_MESSAGE";
+    public static final String USER_ID_MESSAGE = "com.dylanhobbs.tempospotter.USER_ID_MESSAGE";
 
     private static final String CLIENT_ID = "f8e62d489d8d48d29ea438319de216d7";
     private static final String REDIRECT_URI = "tempo-spotter-android-login://callback";
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements
     // Request code that will be used to verify if the result comes from correct activity
     // Can be any integer
     private static final int REQUEST_CODE = 1337;
+    private String userID = "";
 
     private Player mPlayer;
     public static SpotifyService spotify = null;
@@ -149,8 +151,12 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     public void goToSeedGenertion(Track track){
+        TextView textView = (TextView) findViewById(R.id.display_name_box);
+        userID = (String) textView.getText();
+
         Intent intent = new Intent(this, SeedGeneration.class);
         intent.putExtra(TRACK_MESSAGE, track.id);
+        intent.putExtra(USER_ID_MESSAGE, userID);
         startActivity(intent);
     }
 
@@ -184,7 +190,6 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onLoggedIn() {
         Log.d("MainActivity", "User logged in");
-
         //Test Player
         //mPlayer.playUri(null, "spotify:track:2TpxZ7JUBn3uw46aR7qd6V", 0, 0);
         spotify.getMe(new Callback<UserPrivate>() {
@@ -192,7 +197,7 @@ public class MainActivity extends AppCompatActivity implements
             public void success(UserPrivate user, Response response) {
                 Log.d("Me success", user.email);
                 TextView textView = (TextView) findViewById(R.id.display_name_box);
-                textView.setText(user.email);
+                textView.setText(user.id);
             }
 
             @Override

@@ -180,7 +180,7 @@ public class RecommendationsGeneration extends AppCompatActivity {
                                 new SweetAlertDialog(current, SweetAlertDialog.SUCCESS_TYPE)
                                         .setTitleText("Playlist Created!")
                                         .setContentText("Head on over to Spotify to check it out!")
-                                        .show(); 
+                                        .show();
                             }
 
                             @Override
