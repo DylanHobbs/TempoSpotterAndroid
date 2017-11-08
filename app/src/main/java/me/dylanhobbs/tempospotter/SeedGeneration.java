@@ -3,8 +3,8 @@ package me.dylanhobbs.tempospotter;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Keep;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -23,6 +23,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
+@Keep
 public class SeedGeneration extends AppCompatActivity {
     SpotifyService spotify;
     public static final String SEED_MESSAGE = "com.dylanhobbs.tempospotter.SEED_MESSAGE";
@@ -63,7 +64,6 @@ public class SeedGeneration extends AppCompatActivity {
 
             @Override
             public void failure(RetrofitError error) {
-                Log.d("Me failure", error.toString());
             }
         });
 
@@ -97,14 +97,14 @@ public class SeedGeneration extends AppCompatActivity {
 
                     @Override
                     public void failure(RetrofitError error) {
-                        Log.d("Failed to get tracks", error.toString());
                     }
                 });
             }
         });
     }
 
-    protected void longTermTop(View view){
+    @Keep
+    public void longTermTop(View view){
         HashMap<String, Object> options = new HashMap<>();
         options.put("limit", 20);
         options.put("time_range", "long_term");
@@ -121,12 +121,12 @@ public class SeedGeneration extends AppCompatActivity {
 
             @Override
             public void failure(RetrofitError error) {
-                Log.d("Me failure", error.toString());
             }
         });
     }
 
-    protected void mediumTermTop(View view){
+    @Keep
+    public void mediumTermTop(View view){
         HashMap<String, Object> options = new HashMap<>();
         options.put("limit", 20);
         options.put("time_range", "medium_term");
@@ -143,12 +143,12 @@ public class SeedGeneration extends AppCompatActivity {
 
             @Override
             public void failure(RetrofitError error) {
-                Log.d("Me failure", error.toString());
             }
         });
     }
 
-    protected void shortTermTop(View view){
+    @Keep
+    public void shortTermTop(View view){
         HashMap<String, Object> options = new HashMap<>();
         options.put("limit", 20);
         options.put("time_range", "short_term");
@@ -165,7 +165,6 @@ public class SeedGeneration extends AppCompatActivity {
 
             @Override
             public void failure(RetrofitError error) {
-                Log.d("Me failure", error.toString());
             }
         });
     }

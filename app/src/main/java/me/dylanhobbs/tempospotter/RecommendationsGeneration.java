@@ -4,13 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -82,14 +82,12 @@ public class RecommendationsGeneration extends AppCompatActivity {
 
                     @Override
                     public void failure(RetrofitError error) {
-                        Log.d("Me failure", error.toString());
                     }
                 });
             }
 
             @Override
             public void failure(RetrofitError error) {
-                Log.d("Me failure", error.toString());
             }
         });
     }
@@ -129,6 +127,7 @@ public class RecommendationsGeneration extends AppCompatActivity {
                         for (int i=0;i<a.getCount();i++){
                             trackList.add((Track) a.getItem(i));
                         }
+                        Collections.reverse(trackList);
 
                         // Add them to the playlist
                         HashMap<String, Object> options1 = new HashMap<>();
@@ -156,22 +155,18 @@ public class RecommendationsGeneration extends AppCompatActivity {
 
                             @Override
                             public void failure(RetrofitError error) {
-                                Log.d("Playlist Generation", " Failed trying to add tracks", error);
                             }
                         });
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
-                        Log.d("Playlist Generation", " Failed trying to create playlist", error);
                     }
                 });
             }
 
             @Override
             public void failure(RetrofitError error) {
-                Log.d("Playlist Generation", " Failed to get user profile", error);
-
                 // Show failure - Previous errors bubble up
                 new SweetAlertDialog(current, SweetAlertDialog.ERROR_TYPE)
                         .setTitleText("Oops...")
