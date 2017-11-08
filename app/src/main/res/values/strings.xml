@@ -13,4 +13,6 @@
     <string name="help_string_1">Welcome to TempoSpotter! To get started, enter a song that sounds good to run to!</string>
     <string name="help_string_2">Nice choice! Next, choose what you want the playlist based off. Overall top over short, long, or medium term. Or choose a playlist.</string>
     <string name="help_string_3">Here\'s a preview of your playlist. Enter a name and press "Create Playlist" to send it over to spotify!</string>
+    <string name="com_spotify_sdk_redirect_scheme">tempo-spotter-android-login</string>
+    <string name="com_spotify_sdk_redirect_host">callback</string>
 </resources>

@@ -3,6 +3,7 @@ package me.dylanhobbs.tempospotter;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Keep;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -22,6 +23,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
+@Keep
 public class SeedGeneration extends AppCompatActivity {
     SpotifyService spotify;
     public static final String SEED_MESSAGE = "com.dylanhobbs.tempospotter.SEED_MESSAGE";
@@ -101,7 +103,8 @@ public class SeedGeneration extends AppCompatActivity {
         });
     }
 
-    protected void longTermTop(View view){
+    @Keep
+    public void longTermTop(View view){
         HashMap<String, Object> options = new HashMap<>();
         options.put("limit", 20);
         options.put("time_range", "long_term");
@@ -122,14 +125,15 @@ public class SeedGeneration extends AppCompatActivity {
         });
     }
 
-    protected void mediumTermTop(View view){
+    @Keep
+    public void mediumTermTop(View view){
         HashMap<String, Object> options = new HashMap<>();
         options.put("limit", 20);
         options.put("time_range", "medium_term");
         spotify.getTopTracks(options, new Callback<Pager<Track>>() {
             @Override
             public void success(Pager<Track> trackPager, Response response) {
-                // Get tracks from pager
+                // Get tracks from pager 
                 List<Track> trackList = trackPager.items;
 
                 String[] trackSeedGeneration = translateAndShuffle(trackList);
@@ -143,7 +147,8 @@ public class SeedGeneration extends AppCompatActivity {
         });
     }
 
-    protected void shortTermTop(View view){
+    @Keep
+    public void shortTermTop(View view){
         HashMap<String, Object> options = new HashMap<>();
         options.put("limit", 20);
         options.put("time_range", "short_term");
