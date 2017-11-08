@@ -133,7 +133,7 @@ public class SeedGeneration extends AppCompatActivity {
         spotify.getTopTracks(options, new Callback<Pager<Track>>() {
             @Override
             public void success(Pager<Track> trackPager, Response response) {
-                // Get tracks from pager 
+                // Get tracks from pager
                 List<Track> trackList = trackPager.items;
 
                 String[] trackSeedGeneration = translateAndShuffle(trackList);

@@ -4,7 +4,10 @@ import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.content.Intent;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -55,6 +58,23 @@ public class MainActivity extends AppCompatActivity {
                 "playlist-modify-public", "playlist-modify-private", "playlist-read-collaborative"});
         AuthenticationRequest request = builder.build();
         AuthenticationClient.openLoginActivity(this, AUTH_TOKEN_REQUEST_CODE, request);
+
+        // Add action to enter button
+        EditText editText = (EditText) findViewById(R.id.song_search_query);
+        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {;
+                    if (v != null) {
+                        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    }
+                    searchForSong(v);
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     @Override
@@ -81,21 +101,29 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void success(TracksPager returnedPager, Response response) {
                 // Transform pager to list of tracks
-                Pager<Track> trackPager  = returnedPager.tracks;
-                List<Track> trackList = trackPager.items;
-                ArrayList<Track> useableTrackList = (ArrayList) trackList;
+                if (returnedPager.tracks.total != 0){
+                    Pager<Track> trackPager  = returnedPager.tracks;
+                    List<Track> trackList = trackPager.items;
+                    ArrayList<Track> useableTrackList = (ArrayList) trackList;
 
-                // Get the list
-                ListView listView = (ListView) findViewById(R.id.song_result_list);
+                    // Get the list
+                    ListView listView = (ListView) findViewById(R.id.song_result_list);
 
-                // Add to adapter
-                RecommendationAdapter tracksAdapter = new RecommendationAdapter(
-                        current,
-                        android.R.layout.simple_list_item_1,
-                        useableTrackList);
+                    // Add to adapter
+                    RecommendationAdapter tracksAdapter = new RecommendationAdapter(
+                            current,
+                            android.R.layout.simple_list_item_1,
+                            useableTrackList);
 
-                // Set adapter
-                listView.setAdapter(tracksAdapter);
+                    // Set adapter
+                    listView.setAdapter(tracksAdapter);
+                } else {
+                    new SweetAlertDialog(current, SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText("No matches")
+                            .setContentText("Better check your spelling or try a different song")
+                            .setConfirmText("Willdo")
+                            .show();
+                }
             }
 
             @Override

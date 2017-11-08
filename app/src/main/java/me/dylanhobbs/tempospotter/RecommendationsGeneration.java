@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -126,6 +127,7 @@ public class RecommendationsGeneration extends AppCompatActivity {
                         for (int i=0;i<a.getCount();i++){
                             trackList.add((Track) a.getItem(i));
                         }
+                        Collections.reverse(trackList);
 
                         // Add them to the playlist
                         HashMap<String, Object> options1 = new HashMap<>();
