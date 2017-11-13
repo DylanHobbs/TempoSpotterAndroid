@@ -15,4 +15,5 @@
     <string name="help_string_3">Here\'s a preview of your playlist. Enter a name and press "Create Playlist" to send it over to spotify!</string>
     <string name="com_spotify_sdk_redirect_scheme">tempo-spotter-android-login</string>
     <string name="com_spotify_sdk_redirect_host">callback</string>
+    <string name="album_art_content_decription">Album Art</string>
 </resources>

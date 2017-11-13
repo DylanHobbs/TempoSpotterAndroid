@@ -11,6 +11,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.spotify.sdk.android.authentication.AuthenticationClient;
@@ -102,12 +103,18 @@ public class MainActivity extends AppCompatActivity {
             public void success(TracksPager returnedPager, Response response) {
                 // Transform pager to list of tracks
                 if (returnedPager.tracks.total != 0){
+                    // Start spinner
+                    ProgressBar pb = (ProgressBar) findViewById(R.id.list_pop_spinner);
+                    pb.setVisibility(View.VISIBLE);
+
+                    // Get and hide the list
+                    ListView listView = (ListView) findViewById(R.id.song_result_list);
+                    listView.setVisibility(View.INVISIBLE);
+
+                    // Hide results list
                     Pager<Track> trackPager  = returnedPager.tracks;
                     List<Track> trackList = trackPager.items;
                     ArrayList<Track> useableTrackList = (ArrayList) trackList;
-
-                    // Get the list
-                    ListView listView = (ListView) findViewById(R.id.song_result_list);
 
                     // Add to adapter
                     RecommendationAdapter tracksAdapter = new RecommendationAdapter(
@@ -117,6 +124,11 @@ public class MainActivity extends AppCompatActivity {
 
                     // Set adapter
                     listView.setAdapter(tracksAdapter);
+
+                    // stop spinner
+                    pb.setVisibility(View.GONE);
+                    //show list
+                    listView.setVisibility(View.VISIBLE);
                 } else {
                     new SweetAlertDialog(current, SweetAlertDialog.WARNING_TYPE)
                             .setTitleText("No matches")
